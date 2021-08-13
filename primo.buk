@@ -1,0 +1,6 @@
+:loop
+let primo = input()
+
+let secondo = input()
+
+primo + secondo

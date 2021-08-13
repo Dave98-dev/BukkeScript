@@ -1,0 +1,29 @@
+let counter = 0
+let innercounter = 0
+let staircase = input()
+
+
+:LOOP:
+innercounter = 0 - 1
+:INNERLOOP:
+innercounter = innercounter + 1
+0
+if innercounter < counter goto :INNERLOOP:
+counter = counter + 1
+999
+if counter < staircase goto :LOOP:
+
+counter = staircase - 2
+innercounter = 0
+
+let last = 0-1
+
+:LOOP2:
+innercounter = 0 - 1
+:INNERLOOP2:
+innercounter = innercounter + 1
+0
+if innercounter < counter goto :INNERLOOP2:
+counter = counter - 1
+999
+if counter > last goto :LOOP2:
