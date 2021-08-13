@@ -1,0 +1,15 @@
+let counter = 0
+let divisore = 1
+let segno = 1
+let pi = 0
+let menoUno = 0-1
+
+:LOOP:
+pi = pi + segno / divisore
+segno = segno * menoUno
+divisore = divisore + 2
+counter = counter + 1
+if counter < 100000 goto :LOOP:
+
+pi * 4
+\n
