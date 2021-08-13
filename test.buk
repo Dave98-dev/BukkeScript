@@ -10,7 +10,7 @@ innercounter = innercounter + 1
 0
 if innercounter < counter goto :INNERLOOP:
 counter = counter + 1
-999
+\n
 if counter < staircase goto :LOOP:
 
 counter = staircase - 2
@@ -25,5 +25,5 @@ innercounter = innercounter + 1
 0
 if innercounter < counter goto :INNERLOOP2:
 counter = counter - 1
-999
+\n
 if counter > last goto :LOOP2:

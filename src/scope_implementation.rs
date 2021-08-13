@@ -3,15 +3,16 @@ use crate::variable_implementation::add_variables;
 use crate::variable_implementation::get_name_and_value;
 use std::collections::HashMap;
 
-pub struct OutputStatement {
-    pub output: String,
-    pub riga: usize,
-    pub newline:bool,
-}
-
 pub struct Scope {
     variables: HashMap<String, f32>,
     jumps: HashMap<String, usize>,
+}
+
+pub enum StatementResult{
+    Output(String),
+    LineJump(usize),
+    NewLine,
+    Nothing
 }
 
 impl Scope {
@@ -23,11 +24,15 @@ impl Scope {
             jumps: jumps,
         };
     }
-    pub fn execute(&mut self, s: String, line_number: usize) -> Option<OutputStatement> {
+    pub fn execute(&mut self, s: String, line_number: usize) -> StatementResult {
         //se inizia per : ignoro
         if s.len() > 1 && s.chars().next().unwrap() == ':' {
             &self.jumps.entry(s).or_insert(line_number);
-            return None;
+            return StatementResult::Nothing;
+        }
+
+        if s.len() == 2 && &s.trim()[..2] == "\\n"{
+            return StatementResult::NewLine;
         }
 
         if s.len() > 2 && &s.trim()[..2] == "if" {
@@ -37,30 +42,18 @@ impl Scope {
                     match eval(&expression, &self.variables) {
                         Ok(result) => {
                             if result == 1.0 {
-                                return Some(OutputStatement {
-                                    output: format!(""),
-                                    riga: *self.jumps.get(label.trim()).unwrap(),
-                                    newline:false
-                                });
+                                return StatementResult::LineJump(*self.jumps.get(label.trim()).unwrap())
                             }
                             //restituisco niente perché è un assegnamento
-                            return None;
+                            return StatementResult::Nothing;
                         }
                         Err(e) => {
-                            return Some(OutputStatement {
-                                output: e,
-                                riga: line_number + 1,
-                                newline:false
-                            });
+                            return StatementResult::Output(e);
                         }
                     }
                 }
                 Err(error) => {
-                    return Some(OutputStatement {
-                        output: error,
-                        riga: line_number + 1,
-                        newline:false
-                    });
+                    return StatementResult::Output(error);
                 }
             }
         }
@@ -74,11 +67,7 @@ impl Scope {
                     }
                 }
                 Err(e) => {
-                    return Some(OutputStatement {
-                        output: String::from(e),
-                        riga: line_number + 1,
-                        newline:false
-                    })
+                    return StatementResult::Output(String::from(e));                    
                 }
             }
         }
@@ -90,39 +79,28 @@ impl Scope {
                         Ok(result) => {
                             *self.variables.get_mut(&name).unwrap() = result;
                             //restituisco niente perché è un assegnamento
-                            return None;
+                            return StatementResult::Nothing;
                         }
                         Err(e) => {
-                            return Some(OutputStatement {
-                                output: e,
-                                riga: line_number + 1,
-                                newline:false
-                            });
+                            return StatementResult::Output(e);
                         }
                     }
                 }
                 //altrimenti mostro il valore
                 Err(_e) => match eval(&s, &self.variables) {
                     Ok(result) => {
-                        return Some(OutputStatement {
-                            output: format!("{}", result),
-                            riga: line_number + 1,
-                            newline:false
-                        });
+                        return StatementResult::Output(format!("{}", result));
                     }
                     Err(e) => {
-                        return Some(OutputStatement {
-                            output: e,
-                            riga: line_number + 1,
-                            newline:false
-                        });
+                        return StatementResult::Output(e);
                     }
                 },
             }
         } else {
-            return None;
+            return StatementResult::Nothing;
         }
     }
+    
     pub fn get_if_expression(s: &str) -> Result<(String, String), String> {
         let goto_index = s.find("goto");
         match goto_index {

@@ -36,17 +36,22 @@ fn main() {
             if let Some('\r') = s.chars().next_back() {
                 s.pop();
             }
-            if let Some(result) = scope.execute(s, i){
-                if result.output.trim() != ""{
-                    if result.output.trim() == "999"{
-                        println!()
-                    }else{
-                        print!("{}", result.output);
-                    }
+
+            match scope.execute(s, i) {
+                scope_implementation::StatementResult::Output(result) => {
+                    print!("{}", result);
+                    i += 1;
+                },
+                scope_implementation::StatementResult::LineJump(jump_line)=>{
+                    i = jump_line;
+                },
+                scope_implementation::StatementResult::NewLine=>{
+                    println!();
+                    i+=1;
+                },
+                scope_implementation::StatementResult::Nothing=>{
+                    i+=1;
                 }
-                i = result.riga;
-            }else{
-                i += 1;
             }
 
         }
