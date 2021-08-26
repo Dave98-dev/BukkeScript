@@ -4,6 +4,8 @@ let segno = 1
 let pi = 0
 let menoUno = 0-1
 
+:test:
+
 :LOOP:
 pi = pi + segno / divisore
 segno = segno * menoUno
