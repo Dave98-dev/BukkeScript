@@ -1,0 +1,20 @@
+let inizio = input()
+
+if inizio ? 111 goto :printZero:
+if inizio ? 110 goto :printUno:
+if inizio ? 101 goto :printUno:
+if inizio ? 100 goto :printZero:
+if inizio ? 011 goto :printUno:
+if inizio ? 010 goto :printUno:
+if inizio ? 001 goto :printUno:
+if inizio ? 000 goto :printZero:
+
+:printZero:
+0
+if 1 > 0 goto :end:
+:printUno:
+1
+if 1 > 0 goto :end:
+
+:end:
+\n

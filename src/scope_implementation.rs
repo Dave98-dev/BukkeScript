@@ -24,13 +24,21 @@ impl Scope {
             jumps: jumps,
         };
     }
-    pub fn execute(&mut self, s: String, line_number: usize) -> StatementResult {
-        //se inizia per : ignoro
+
+    pub fn get_jump(&mut self, s: String, line_number: usize) {
+        //se inizia per : e un salto
         if s.len() > 1 && s.chars().next().unwrap() == ':' {
             &self.jumps.entry(s).or_insert(line_number);
+        }
+    }
+
+
+    pub fn execute(&mut self, s: String) -> StatementResult {
+        //se inizia per : ignoro
+        if s.len() > 1 && s.chars().next().unwrap() == ':' {
             return StatementResult::Nothing;
         }
-
+        
         if s.len() == 2 && &s.trim()[..2] == "\\n"{
             return StatementResult::NewLine;
         }

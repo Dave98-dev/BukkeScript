@@ -21,6 +21,13 @@ fn main() {
             .filter(|l| l != "")
             .collect();
 
+
+        for i in 0..linee.len() {
+            let line = linee[i].clone();
+            scope.get_jump(line, i);
+        }
+        
+
         let mut i = 0;
         loop{
             if i >= linee.len(){
@@ -37,7 +44,7 @@ fn main() {
                 s.pop();
             }
 
-            match scope.execute(s, i) {
+            match scope.execute(s) {
                 scope_implementation::StatementResult::Output(result) => {
                     print!("{}", result);
                     i += 1;

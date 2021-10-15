@@ -36,7 +36,7 @@ pub fn eval(s: &String, variables: &HashMap<String, f32>) -> Result<f32, String>
 }
 
 fn get_first_symbol(s: &String) -> Option<usize> {
-    let symbols = ['+', '-', '*', '/', '>', '<'];
+    let symbols = ['+', '-', '%', '*', '/', '>', '<', '?'];
 
     for operation in &symbols {
         let mut index = 0;
@@ -56,8 +56,10 @@ fn operations(operation: char) -> Result<fn(f32, f32) -> f32, String> {
         '-' => Ok(|x, y| x - y),
         '*' => Ok(|x, y| x * y),
         '/' => Ok(|x, y| x / y),
+        '%' => Ok(|x, y| (x.round() % y.round())),
         '>' => Ok(|x, y| if x > y { 1.0 } else { 0.0 }),
         '<' => Ok(|x, y| if x < y { 1.0 } else { 0.0 }),
+        '?' => Ok(|x, y| if x == y { 1.0 } else { 0.0 }),
         _ => Err(format!("operator '{}' not found", operation)),
     }
 }
