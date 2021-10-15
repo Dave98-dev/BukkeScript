@@ -1,0 +1,12 @@
+let number = 12552
+let binary_out = 0
+let exp = 1
+let base = number
+
+:LOOP:
+
+binary_out = binary_out + base % 2 * exp
+base = number / 2
+exp = exp * 10
+
+if base > 1 goto :LOOP:
